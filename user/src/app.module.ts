@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { KafkaconsumerService } from './kafkaconsumer/kafkaconsumer.service';
 
 @Module({
   imports: [
@@ -28,6 +29,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, KafkaconsumerService],
 })
 export class AppModule {}
