@@ -17,7 +17,10 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
     await this.producer.disconnect();
   }
 
-  async produce(record: ProducerRecord) {
-    await this.producer.send(record);
+  async produce(record: ProducerRecord, topic: string) {
+    await this.producer.send({
+      topic,
+      messages: [{ value: JSON.stringify({ record }) }],
+    });
   }
 }
