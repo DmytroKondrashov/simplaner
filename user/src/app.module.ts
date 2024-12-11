@@ -5,9 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KafkaconsumerService } from './kafkaconsumer/kafkaconsumer.service';
+import { UserService } from './user/user.service';
+import { User } from './user/entities/user.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -29,6 +32,6 @@ import { KafkaconsumerService } from './kafkaconsumer/kafkaconsumer.service';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, KafkaconsumerService],
+  providers: [AppService, KafkaconsumerService, UserService],
 })
 export class AppModule {}
