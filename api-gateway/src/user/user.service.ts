@@ -20,7 +20,7 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
   async produce(record: any, topic: string) {
     await this.producer.send({
       topic,
-      messages: [{ value: JSON.stringify({ record }) }],
+      messages: [{ value: JSON.stringify(record) }],
     });
   }
 }
