@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KafkaconsumerService } from './kafkaconsumer/kafkaconsumer.service';
 import { UserService } from './user/user.service';
 import { User } from './user/entities/user.entity';
+import { KafkapublisherService } from './kafkapublisher/kafkapublisher.service';
 
 @Module({
   imports: [
@@ -32,6 +33,6 @@ import { User } from './user/entities/user.entity';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, KafkaconsumerService, UserService],
+  providers: [AppService, KafkaconsumerService, UserService, KafkapublisherService],
 })
 export class AppModule {}
