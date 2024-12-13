@@ -4,17 +4,27 @@ import { User } from './entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { SearchUserDto } from './dto/search-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { KafkapublisherService } from 'src/kafkapublisher/kafkapublisher.service';
 
 @Injectable()
 export class UserService {
   constructor(
+    private readonly kafkaPublisher: KafkapublisherService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(user: CreateUserDto): Promise<User> {
-    const newUser = this.userRepository.create(user);
-    return this.userRepository.save(newUser);
+  async create(user: CreateUserDto) {
+    try {
+      const newUser = this.userRepository.create(user);
+      await this.userRepository.save(newUser);
+      await this.kafkaPublisher.produce(newUser, 'user.created.success');
+    } catch (error) {
+      await this.kafkaPublisher.produce(
+        { error: error.message },
+        'user.created.failed',
+      );
+    }
   }
 
   async findAll(): Promise<User[]> {
