@@ -6,6 +6,6 @@ export class UserService {
   constructor(private readonly publisherService: PublisherService) {}
 
   async produce(record: any, topic: string) {
-    await this.publisherService.produce(topic, record);
+    await this.publisherService.produce(record, topic);
   }
 }
