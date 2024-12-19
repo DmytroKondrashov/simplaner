@@ -15,13 +15,22 @@ export class ConsumerService {
     await this.consumer.connect();
     await this.consumer.subscribe({
       topics: ['user.created.success', 'user.created.failed'],
-      fromBeginning: false,
+      fromBeginning: true,
     });
+    console.log('==============');
+    console.log(
+      'Api-gateway is subscribed to user.created.success, user.created.failed topics',
+    );
+    console.log('==============');
 
     await this.consumer.run({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       eachMessage: async ({ topic, partition, message }) => {
         const value = message.value?.toString();
+
+        console.log('==============');
+        console.log('Api-gateway is consuming...', JSON.parse(value));
+        console.log('==============');
 
         if (topic === 'user.created.success') {
           const data = JSON.parse(value);

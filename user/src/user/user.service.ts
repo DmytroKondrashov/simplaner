@@ -16,10 +16,17 @@ export class UserService {
 
   async create(user: CreateUserDto) {
     try {
+      console.log('==============');
+      console.log('User-service is creating...', user);
+      console.log('==============');
       const newUser = this.userRepository.create(user);
       await this.userRepository.save(newUser);
+      console.log('User-service is saved...', newUser);
       await this.kafkaPublisher.produce(newUser, 'user.created.success');
     } catch (error) {
+      console.log('==============');
+      console.log('User-service is failed...');
+      console.log('==============');
       await this.kafkaPublisher.produce(
         { error: error.message },
         'user.created.failed',

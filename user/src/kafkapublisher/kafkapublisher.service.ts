@@ -18,6 +18,12 @@ export class KafkapublisherService implements OnModuleInit, OnModuleDestroy {
   }
 
   async produce(record: any, topic: string) {
+    console.log('==============');
+    console.log('User-service is producing...', {
+      record: JSON.stringify(record),
+      topic,
+    });
+    console.log('==============');
     await this.producer.send({
       topic,
       messages: [{ value: JSON.stringify(record) }],

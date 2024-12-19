@@ -18,13 +18,20 @@ export class KafkaconsumerService implements OnModuleInit, OnModuleDestroy {
     await this.consumer.connect();
     await this.consumer.subscribe({
       topic: 'user.created',
-      fromBeginning: false,
+      fromBeginning: true,
     });
+    console.log('==============');
+    console.log('User-service is subscribed to user.created topic');
+    console.log('==============');
 
     await this.consumer.run({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       eachMessage: async ({ topic, partition, message }) => {
         const value = message.value?.toString();
+
+        console.log('==============');
+        console.log('User-service is consuming...', JSON.parse(value));
+        console.log('==============');
 
         if (topic === 'user.created') {
           const userData = JSON.parse(value);

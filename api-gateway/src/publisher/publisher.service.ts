@@ -22,5 +22,8 @@ export class PublisherService {
       topic,
       messages: [{ value: JSON.stringify(record) }],
     });
+    console.log('==============');
+    console.log('Api-gateway has produced...', { record, topic });
+    console.log('==============');
   }
 }
