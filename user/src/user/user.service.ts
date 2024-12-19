@@ -1,36 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { SearchUserDto } from './dto/search-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { KafkapublisherService } from 'src/kafkapublisher/kafkapublisher.service';
+import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
 export class UserService {
   constructor(
-    private readonly kafkaPublisher: KafkapublisherService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject('API_GATEWAY_SERVICE') private readonly client: ClientKafka,
   ) {}
 
   async create(user: CreateUserDto) {
     try {
-      console.log('==============');
-      console.log('User-service is creating...', user);
-      console.log('==============');
       const newUser = this.userRepository.create(user);
       await this.userRepository.save(newUser);
-      console.log('User-service is saved...', newUser);
-      await this.kafkaPublisher.produce(newUser, 'user.created.success');
+      await this.client.emit('user.created.success', newUser);
     } catch (error) {
-      console.log('==============');
-      console.log('User-service is failed...');
-      console.log('==============');
-      await this.kafkaPublisher.produce(
-        { error: error.message },
-        'user.created.failed',
-      );
+      await this.client.emit('user.created.failed', { error: error.message });
     }
   }
 

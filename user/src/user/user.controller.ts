@@ -1,38 +1,20 @@
-import {
-  // Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  // Post,
-  // UseGuards,
-} from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
+import { ClientKafka, EventPattern, Payload } from '@nestjs/microservices';
 import { UserService } from './user.service';
-// import { CreateUserDto } from './dto/create-user.dto';
-// import UserUniquenessGuard from 'src/guards/user-uniqueness.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    @Inject('API_GATEWAY_SERVICE') private readonly client: ClientKafka,
+    private readonly userService: UserService,
+  ) {}
 
-  // @Post()
-  // @UseGuards(UserUniquenessGuard)
-  // create(@Body() user: CreateUserDto) {
-  //   return this.userService.create(user);
-  // }
+  @EventPattern('user.creation.initiated')
+  async handleUserCreationInitiated(@Payload() data: any) {
+    console.log('==============');
+    console.log('UserController is consuming...', data);
+    console.log('==============');
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string, @Param('email') email: string) {
-    return this.userService.findOne({ id: Number(id), email });
-  }
-
-  @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.userService.delete(Number(id));
+    await this.userService.create(data);
   }
 }
