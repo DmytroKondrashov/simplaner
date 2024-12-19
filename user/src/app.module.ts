@@ -8,6 +8,7 @@ import { KafkaconsumerService } from './kafkaconsumer/kafkaconsumer.service';
 import { UserService } from './user/user.service';
 import { User } from './user/entities/user.entity';
 import { KafkapublisherService } from './kafkapublisher/kafkapublisher.service';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -15,6 +16,20 @@ import { KafkapublisherService } from './kafkapublisher/kafkapublisher.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ClientsModule.register([
+      {
+        name: 'API_GATEWAY_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            brokers: ['localhost:9092'],
+          },
+          consumer: {
+            groupId: 'api-gateway-consumer',
+          },
+        },
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -33,6 +48,11 @@ import { KafkapublisherService } from './kafkapublisher/kafkapublisher.service';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, KafkaconsumerService, UserService, KafkapublisherService],
+  providers: [
+    AppService,
+    KafkaconsumerService,
+    UserService,
+    KafkapublisherService,
+  ],
 })
 export class AppModule {}
