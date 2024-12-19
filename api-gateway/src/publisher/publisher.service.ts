@@ -1,29 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { Kafka, Producer } from 'kafkajs';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
 export class PublisherService {
-  private readonly kafka = new Kafka({
-    brokers: [process.env.KAFKA_BROKER],
-  });
-
-  private readonly producer: Producer = this.kafka.producer();
-
-  async onModuleInit() {
-    await this.producer.connect();
-  }
-
-  async onModuleDestroy() {
-    await this.producer.disconnect();
-  }
+  constructor(@Inject('USER_SERVICE') private readonly client: ClientKafka) {}
 
   async produce(record: any, topic: string) {
-    await this.producer.send({
-      topic,
-      messages: [{ value: JSON.stringify(record) }],
-    });
-    console.log('==============');
-    console.log('Api-gateway has produced...', { record, topic });
-    console.log('==============');
+    this.client.emit(topic, record);
   }
 }
