@@ -19,8 +19,20 @@ export class UserService {
       const newUser = this.userRepository.create(user);
       await this.userRepository.save(newUser);
       await this.client.emit('user.created.success', newUser);
+      console.log('==============');
+      console.log(
+        'User-service has emitted user.created.success event',
+        newUser,
+      );
+      console.log('==============');
     } catch (error) {
       await this.client.emit('user.created.failed', { error: error.message });
+      console.log('==============');
+      console.log(
+        'User-service has emitted user.created.failed event',
+        error.message,
+      );
+      console.log('==============');
     }
   }
 
