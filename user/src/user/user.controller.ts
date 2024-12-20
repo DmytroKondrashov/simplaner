@@ -11,10 +11,6 @@ export class UserController {
 
   @EventPattern('user.creation.initiated')
   async handleUserCreationInitiated(@Payload() data: any) {
-    console.log('==============');
-    console.log('UserController is consuming...', data);
-    console.log('==============');
-
     await this.userService.create(data);
   }
 }
