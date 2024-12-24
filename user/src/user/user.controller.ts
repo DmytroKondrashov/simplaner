@@ -1,5 +1,5 @@
 import { Controller, Inject } from '@nestjs/common';
-import { ClientKafka, EventPattern, Payload } from '@nestjs/microservices';
+import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -9,7 +9,7 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
-  @EventPattern('user.creation.initiated')
+  @MessagePattern('user.create')
   async handleUserCreationInitiated(@Payload() data: any) {
     await this.userService.create(data);
   }

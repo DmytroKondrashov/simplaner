@@ -1,39 +1,21 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { SearchUserDto } from './dto/search-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @Inject('API_GATEWAY_SERVICE') private readonly client: ClientKafka,
   ) {}
 
   async create(user: CreateUserDto) {
-    try {
-      const newUser = this.userRepository.create(user);
-      await this.userRepository.save(newUser);
-      await this.client.emit('user.created.success', newUser);
-      console.log('==============');
-      console.log(
-        'User-service has emitted user.created.success event',
-        newUser,
-      );
-      console.log('==============');
-    } catch (error) {
-      await this.client.emit('user.created.failed', { error: error.message });
-      console.log('==============');
-      console.log(
-        'User-service has emitted user.created.failed event',
-        error.message,
-      );
-      console.log('==============');
-    }
+    const newUser = this.userRepository.create(user);
+    const res = await this.userRepository.save(newUser);
+    return `User created successfully: ${res.id}`;
   }
 
   async findAll(): Promise<User[]> {
