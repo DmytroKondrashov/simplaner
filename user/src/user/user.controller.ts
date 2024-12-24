@@ -11,6 +11,6 @@ export class UserController {
 
   @MessagePattern('user.create')
   async handleUserCreationInitiated(@Payload() data: any) {
-    await this.userService.create(data);
+    return this.userService.create(data);
   }
 }
