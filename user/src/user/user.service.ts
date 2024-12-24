@@ -31,7 +31,8 @@ export class UserService {
     if (email) {
       query.where('user.email = :email', { email });
     }
-    return query.getOne();
+    const res = await query.getOne();
+    return JSON.stringify(res);
   }
 
   async delete(id: number): Promise<DeleteResult> {

@@ -18,4 +18,9 @@ export class UserController {
   async handleUserFindAll() {
     return this.userService.findAll();
   }
+
+  @MessagePattern('user.findOne')
+  async handleUserFindOne(@Payload() data: any) {
+    return this.userService.findOne(data.id);
+  }
 }
