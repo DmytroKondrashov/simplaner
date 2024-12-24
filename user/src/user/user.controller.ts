@@ -13,4 +13,9 @@ export class UserController {
   async handleUserCreationInitiated(@Payload() data: any) {
     return this.userService.create(data);
   }
+
+  @MessagePattern('user.findAll')
+  async handleUserFindAll() {
+    return this.userService.findAll();
+  }
 }
