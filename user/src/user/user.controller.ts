@@ -23,4 +23,9 @@ export class UserController {
   async handleUserFindOne(@Payload() data: any) {
     return this.userService.findOne(data.id);
   }
+
+  @MessagePattern('user.delete')
+  async handleUserDelete(@Payload() data: any) {
+    return this.userService.deleteUser(Number(data.id));
+  }
 }

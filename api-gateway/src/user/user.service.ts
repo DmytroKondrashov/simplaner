@@ -13,8 +13,8 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
   constructor(@Inject('USER_SERVICE') private readonly client: ClientKafka) {}
 
   async onModuleInit() {
-    ['user.create', 'user.findAll', 'user.findOne'].forEach((key) =>
-      this.client.subscribeToResponseOf(key),
+    ['user.create', 'user.findAll', 'user.findOne', 'user.delete'].forEach(
+      (key) => this.client.subscribeToResponseOf(key),
     );
   }
 
@@ -32,6 +32,12 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
 
   async findOne(id: string) {
     const response$ = this.client.send('user.findOne', { id });
+    const response = await firstValueFrom(response$);
+    return response;
+  }
+
+  async deleteUser(id: string) {
+    const response$ = this.client.send('user.delete', { id });
     const response = await firstValueFrom(response$);
     return response;
   }
