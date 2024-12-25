@@ -21,7 +21,7 @@ export class UserController {
 
   @MessagePattern('user.findOne')
   async handleUserFindOne(@Payload() data: any) {
-    return this.userService.findOne(data.id);
+    return this.userService.findOne({ id: Number(data.id) });
   }
 
   @MessagePattern('user.delete')
