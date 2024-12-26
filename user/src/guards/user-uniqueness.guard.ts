@@ -12,7 +12,7 @@ export default class UserUniquenessGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const { email } = request.body;
+    const { email } = request;
     if (!email || typeof email !== 'string') {
       throw new BadRequestException('Please specify the email');
     }
