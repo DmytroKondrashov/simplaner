@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   OnModuleDestroy,
@@ -23,7 +24,14 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
   }
 
   async createUser(body: CreateUserDto) {
-    return this.client.send('user.create', body);
+    try {
+      const response$ = this.client.send('user.create', body);
+      const response = await firstValueFrom(response$);
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException(error);
+    }
   }
 
   async findAll() {

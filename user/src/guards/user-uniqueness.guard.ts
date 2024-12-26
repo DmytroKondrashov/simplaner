@@ -5,6 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
+import { UserAlreadyExistsException } from 'src/exceptions/user-already-exists.exception';
 
 @Injectable()
 export default class UserUniquenessGuard implements CanActivate {
@@ -14,7 +15,7 @@ export default class UserUniquenessGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { email } = request;
     if (!email || typeof email !== 'string') {
-      throw new BadRequestException('Please specify the email');
+      throw new UserAlreadyExistsException();
     }
     const existingUser = await this.userService.findOne({
       id: undefined,
