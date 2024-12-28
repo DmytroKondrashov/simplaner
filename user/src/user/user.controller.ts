@@ -1,11 +1,9 @@
-import { Controller, Inject, UseFilters, UseGuards } from '@nestjs/common';
+import { Controller, Inject, UseGuards } from '@nestjs/common';
 import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 import { UserService } from './user.service';
 import UserUniquenessGuard from 'src/guards/user-uniqueness.guard';
-import KafkaExceptionFilter from 'filters/kafka-exception.filter';
 
 @Controller('user')
-@UseFilters(new KafkaExceptionFilter())
 export class UserController {
   constructor(
     @Inject('API_GATEWAY_SERVICE') private readonly client: ClientKafka,
