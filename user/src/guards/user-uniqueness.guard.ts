@@ -1,11 +1,6 @@
-import {
-  BadRequestException,
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { UserAlreadyExistsException } from 'src/exceptions/user-already-exists.exception';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export default class UserUniquenessGuard implements CanActivate {
@@ -15,14 +10,20 @@ export default class UserUniquenessGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { email } = request;
     if (!email || typeof email !== 'string') {
-      throw new UserAlreadyExistsException();
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Please provide an email string!',
+      });
     }
     const existingUser = await this.userService.findOne({
       id: undefined,
       email,
     });
     if (existingUser) {
-      throw new BadRequestException('A user with this email already exists');
+      throw new RpcException({
+        statusCode: 400,
+        message: 'User already exists',
+      });
     }
     return true;
   }
