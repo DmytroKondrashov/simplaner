@@ -1,7 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { RpcException } from '@nestjs/microservices';
-import { UserAlreadyExistsException } from 'src/exceptions/user-already-exists.exception';
 
 @Injectable()
 export default class UserUniquenessGuard implements CanActivate {
@@ -21,7 +20,10 @@ export default class UserUniquenessGuard implements CanActivate {
       email,
     });
     if (existingUser) {
-      throw new RpcException(new UserAlreadyExistsException());
+      throw new RpcException({
+        statusCode: 400,
+        message: 'A user with this email already exists',
+      });
     }
     return true;
   }
