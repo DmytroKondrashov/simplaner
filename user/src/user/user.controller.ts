@@ -7,6 +7,7 @@ import {
 } from '@nestjs/microservices';
 import { UserService } from './user.service';
 import UserUniquenessGuard from 'src/guards/user-uniqueness.guard';
+import { JwtAuthGuard } from 'src/guards/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -22,16 +23,19 @@ export class UserController {
   }
 
   @MessagePattern('user.findAll')
+  @UseGuards(JwtAuthGuard)
   async handleUserFindAll() {
     return this.userService.findAll();
   }
 
   @MessagePattern('user.findOne')
+  @UseGuards(JwtAuthGuard)
   async handleUserFindOne(@Payload() data: any) {
     return this.userService.findOne({ id: Number(data.id) });
   }
 
   @MessagePattern('user.delete')
+  @UseGuards(JwtAuthGuard)
   async handleUserDelete(@Payload() data: any) {
     return this.userService.deleteUser(Number(data.id));
   }
