@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserService } from './user/user.service';
 import { User } from './user/entities/user.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -46,6 +47,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [AppService, UserService, JwtService],
 })
 export class AppModule {}
