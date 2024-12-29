@@ -1,5 +1,10 @@
 import { Controller, Inject, UseGuards } from '@nestjs/common';
-import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
+import {
+  ClientKafka,
+  MessagePattern,
+  Payload,
+  RpcException,
+} from '@nestjs/microservices';
 import { UserService } from './user.service';
 import UserUniquenessGuard from 'src/guards/user-uniqueness.guard';
 
@@ -29,5 +34,17 @@ export class UserController {
   @MessagePattern('user.delete')
   async handleUserDelete(@Payload() data: any) {
     return this.userService.deleteUser(Number(data.id));
+  }
+
+  @MessagePattern('user.login')
+  async handleUserLogin(@Payload() data: any) {
+    const user = await this.userService.validateUser(data.email, data.password);
+    if (!user) {
+      throw new RpcException({
+        statusCode: 401,
+        message: 'Invalid credentials',
+      });
+    }
+    return this.userService.login(user);
   }
 }
