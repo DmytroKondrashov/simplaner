@@ -1,19 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { SearchUserDto } from './dto/search-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { ClientKafka } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly jwtService: JwtService,
+    @Inject('AUTH_SERVICE') private readonly client: ClientKafka,
   ) {}
+
+  onModuleInit() {
+    this.client.subscribeToResponseOf('authenticate_user');
+  }
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userRepository.findOne({ where: { email } });
@@ -27,15 +32,20 @@ export class UserService {
 
   async login(user: any) {
     const payload = { email: user.email, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const token$ = this.client.send('authenticate_user', payload);
+    const token = firstValueFrom(token$);
+    return { message: `User logged in successfully: ${user.id}`, token };
   }
 
   async create(user: CreateUserDto) {
     const newUser = this.userRepository.create(user);
     const res = await this.userRepository.save(newUser);
-    return `User created successfully: ${res.id}`;
+    const token$ = this.client.send('authenticate_user', {
+      email: res.email,
+      id: res.id,
+    });
+    const token = firstValueFrom(token$);
+    return { message: `User created successfully: ${res.id}`, token };
   }
 
   async findAll(): Promise<User[]> {
