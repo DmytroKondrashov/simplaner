@@ -29,6 +29,18 @@ import { JwtModule } from '@nestjs/jwt';
           },
         },
       },
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            brokers: ['localhost:9092'],
+          },
+          consumer: {
+            groupId: 'auth-consumer',
+          },
+        },
+      },
     ]),
   ],
   controllers: [UserController, JwtStrategy],
