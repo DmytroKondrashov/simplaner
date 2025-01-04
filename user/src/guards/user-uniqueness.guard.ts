@@ -19,6 +19,9 @@ export default class UserUniquenessGuard implements CanActivate {
       id: undefined,
       email,
     });
+    if (existingUser === 'null') {
+      return true;
+    }
     if (existingUser) {
       throw new RpcException({
         statusCode: 400,
