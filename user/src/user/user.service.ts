@@ -31,7 +31,7 @@ export class UserService implements OnModuleInit {
   }
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, id: user.id };
     const token$ = this.client.send('authenticate_user', payload);
     const token = firstValueFrom(token$);
     return { message: `User logged in successfully: ${user.id}`, token };
