@@ -28,6 +28,18 @@ import { JwtService } from '@nestjs/jwt';
           },
         },
       },
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            brokers: ['localhost:9092'],
+          },
+          consumer: {
+            groupId: 'auth-consumer',
+          },
+        },
+      },
     ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
