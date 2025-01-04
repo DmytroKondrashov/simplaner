@@ -44,7 +44,7 @@ export class UserService implements OnModuleInit {
       email: res.email,
       id: res.id,
     });
-    const token = firstValueFrom(token$);
+    const token = await firstValueFrom(token$);
     return { message: `User created successfully: ${res.id}`, token };
   }
 
