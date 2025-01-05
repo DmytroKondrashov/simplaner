@@ -7,15 +7,20 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { firstValueFrom } from 'rxjs';
+import { LoginDto } from './dtos/login.dto';
 
 @Injectable()
 export class UserService implements OnModuleInit, OnModuleDestroy {
   constructor(@Inject('USER_SERVICE') private readonly client: ClientKafka) {}
 
   async onModuleInit() {
-    ['user.create', 'user.findAll', 'user.findOne', 'user.delete'].forEach(
-      (key) => this.client.subscribeToResponseOf(key),
-    );
+    [
+      'user.create',
+      'user.findAll',
+      'user.findOne',
+      'user.delete',
+      'user.login',
+    ].forEach((key) => this.client.subscribeToResponseOf(key));
   }
 
   async onModuleDestroy() {
@@ -40,6 +45,12 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
 
   async deleteUser(id: string) {
     const response$ = this.client.send('user.delete', { id });
+    const response = await firstValueFrom(response$);
+    return response;
+  }
+
+  async login(body: LoginDto) {
+    const response$ = this.client.send('user.login', body);
     const response = await firstValueFrom(response$);
     return response;
   }
