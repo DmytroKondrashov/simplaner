@@ -29,7 +29,6 @@ export class UserController {
   }
 
   @MessagePattern('user.findOne')
-  @UseGuards(JwtAuthGuard)
   async handleUserFindOne(@Payload() data: any) {
     return this.userService.findOne({ id: Number(data.id) });
   }
