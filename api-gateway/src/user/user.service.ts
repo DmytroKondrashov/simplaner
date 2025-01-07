@@ -52,12 +52,8 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
   }
 
   async login(body: LoginDto) {
-    const user$ = await this.client.send('user.findOne', {
-      email: body.email,
-    });
-    const user = await firstValueFrom(user$);
     const response$ = this.client.send('user.login', {
-      email: user.email,
+      email: body.email,
       password: body.password,
     });
     const response = await firstValueFrom(response$);
