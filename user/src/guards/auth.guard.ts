@@ -16,14 +16,7 @@ export class JwtAuthGuard implements CanActivate {
       });
     }
     try {
-      console.log('==============');
-      const decoded = this.jwtService.decode(token);
-      console.log('Decoded Token:', decoded);
-      console.log('==============');
-      const payload = await this.jwtService.verify(token);
-      console.log('==============');
-      console.log(payload);
-      console.log('==============');
+      await this.jwtService.verify(token);
       return true;
     } catch (error) {
       throw new RpcException({
