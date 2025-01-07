@@ -7,6 +7,9 @@ export class AppService {
 
   authenticateUser(payload: any) {
     const { email, id } = payload;
+    console.log('==============');
+    console.log(email, id);
+    console.log('==============');
     return this.jwtService.sign({ email, id });
   }
 }

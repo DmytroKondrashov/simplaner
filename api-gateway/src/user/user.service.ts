@@ -33,8 +33,10 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
     return response;
   }
 
-  async findAll() {
-    return this.client.send('user.findAll', {});
+  async findAll(token: string) {
+    return this.client.send('user.findAll', {
+      token,
+    });
   }
 
   async findOne(id: string) {
@@ -50,7 +52,14 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
   }
 
   async login(body: LoginDto) {
-    const response$ = this.client.send('user.login', body);
+    const user$ = await this.client.send('user.findOne', {
+      email: body.email,
+    });
+    const user = await firstValueFrom(user$);
+    const response$ = this.client.send('user.login', {
+      email: user.email,
+      password: body.password,
+    });
     const response = await firstValueFrom(response$);
     return response;
   }

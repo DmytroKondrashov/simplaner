@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Headers,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -17,12 +25,16 @@ export class UserController {
 
   @Post('login')
   async login(@Body() body: LoginDto) {
+    console.log('==============');
+    console.log(body);
+    console.log('==============');
     return this.userService.login(body);
   }
 
   @Get('all')
-  async findAll() {
-    return this.userService.findAll();
+  async findAll(@Headers('Authorization') authHeader: string) {
+    const token = authHeader.replace('Bearer ', '');
+    return this.userService.findAll(token);
   }
 
   @Get(':id')
