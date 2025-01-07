@@ -41,9 +41,6 @@ export class UserController {
 
   @MessagePattern('user.login')
   async handleUserLogin(@Payload() data: any) {
-    console.log('==============');
-    console.log(data);
-    console.log('==============');
     const user = await this.userService.validateUser(data.email, data.password);
     if (!user) {
       throw new RpcException({
