@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ListModule } from './list/list.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
+    ListModule,
   ],
   controllers: [AppController],
   providers: [AppService],
