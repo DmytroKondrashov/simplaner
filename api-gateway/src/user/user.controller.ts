@@ -25,9 +25,6 @@ export class UserController {
 
   @Post('login')
   async login(@Body() body: LoginDto) {
-    console.log('==============');
-    console.log(body);
-    console.log('==============');
     return this.userService.login(body);
   }
 
