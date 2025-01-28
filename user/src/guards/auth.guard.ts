@@ -8,20 +8,22 @@ export class JwtAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const [data] = context.getArgs();
-    const token = data.token;
+    const token = data?.token;
+
     if (!token) {
       throw new RpcException({
         statusCode: 401,
         message: 'Unauthorized',
       });
     }
+
     try {
-      await this.jwtService.verify(token);
+      await this.jwtService.verifyAsync(token);
       return true;
     } catch (error) {
       throw new RpcException({
-        statusCode: 500,
-        message: error,
+        statusCode: 403,
+        message: 'Invalid or expired token',
       });
     }
   }
