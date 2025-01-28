@@ -1,6 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern } from '@nestjs/microservices';
+import { CreateListDto } from './dtos/create.list.dto';
+import { UpdateListDto } from './dtos/update.list.dto';
 
 @Controller()
 export class AppController {
