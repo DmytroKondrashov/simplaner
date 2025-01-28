@@ -40,7 +40,10 @@ export class UserController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return this.userService.deleteUser(id);
+  async delete(
+    @Param('id') id: string,
+    @Headers('Authorization') authHeader: string,
+  ) {
+    return this.userService.deleteUser(id, authHeader);
   }
 }

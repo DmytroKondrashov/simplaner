@@ -45,8 +45,8 @@ export class UserService implements OnModuleInit, OnModuleDestroy {
     return response;
   }
 
-  async deleteUser(id: string) {
-    const response$ = this.client.send('user.delete', { id });
+  async deleteUser(id: string, token: string) {
+    const response$ = this.client.send('user.delete', { id, token });
     const response = await firstValueFrom(response$);
     return response;
   }
