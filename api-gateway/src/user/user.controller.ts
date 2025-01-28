@@ -44,6 +44,7 @@ export class UserController {
     @Param('id') id: string,
     @Headers('Authorization') authHeader: string,
   ) {
-    return this.userService.deleteUser(id, authHeader);
+    const token = authHeader.replace('Bearer ', '');
+    return this.userService.deleteUser(id, token);
   }
 }
