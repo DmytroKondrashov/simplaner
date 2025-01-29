@@ -7,4 +7,7 @@ export class List {
 
   @Column()
   name: string;
+
+  @Column()
+  userId: string;
 }
