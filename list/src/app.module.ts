@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { List } from './entities/list.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         },
       },
     ]),
+    ConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],
