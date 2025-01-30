@@ -14,13 +14,13 @@ export class AppController {
   }
 
   @MessagePattern('list.create')
-  async create(body: CreateListDto) {
-    return this.appService.create(body);
+  async create(body: CreateListDto, token: string) {
+    return this.appService.create(body, token);
   }
 
   @MessagePattern('list.update')
-  async update(body: UpdateListDto) {
-    return this.appService.update(body);
+  async update(body: UpdateListDto, token: string) {
+    return this.appService.update(body, token);
   }
 
   @MessagePattern('list.delete')
