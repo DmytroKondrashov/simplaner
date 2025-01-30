@@ -9,5 +9,5 @@ export class List {
   name: string;
 
   @Column()
-  userId: string;
+  userId: number;
 }
