@@ -4,8 +4,8 @@ import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { List } from './entities/list.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from './config/config.module';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -39,6 +39,6 @@ import { ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
 export class AppModule {}
