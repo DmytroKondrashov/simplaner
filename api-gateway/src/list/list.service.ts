@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateListDto } from './dtos/create.list.dto';
 import { UpdateListDto } from './dtos/update.post.dto';
 
 @Injectable()
 export class ListService {
-  constructor(private readonly client: ClientProxy) {}
+  constructor(@Inject('LIST_SERVICE') private readonly client: ClientProxy) {}
 
   async findAll(token: string) {
     return this.client.send('list.findAll', { token });
