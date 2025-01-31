@@ -26,7 +26,8 @@ export class ListController {
     @Body() body: CreateListDto,
     @Headers('Authorization') token: string,
   ) {
-    return this.listService.create(body, token);
+    const clearedToken = token.replace('Bearer ', '');
+    return this.listService.create(body, clearedToken);
   }
 
   @Post('update')
