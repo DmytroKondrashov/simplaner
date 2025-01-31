@@ -1,11 +1,17 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { CreateListDto } from './dtos/create.list.dto';
 import { UpdateListDto } from './dtos/update.post.dto';
 
 @Injectable()
-export class ListService {
-  constructor(@Inject('LIST_SERVICE') private readonly client: ClientProxy) {}
+export class ListService implements OnModuleInit {
+  constructor(@Inject('LIST_SERVICE') private readonly client: ClientKafka) {}
+
+  async onModuleInit() {
+    ['list.create', 'list.findAll', 'list.delete', 'list.update'].forEach(
+      (key) => this.client.subscribeToResponseOf(key),
+    );
+  }
 
   async findAll(token: string) {
     return this.client.send('list.findAll', { token });
