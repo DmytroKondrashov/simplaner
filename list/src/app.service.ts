@@ -28,7 +28,8 @@ export class AppService implements OnModuleInit {
     return this.listRepository.find({ where: { userId: decodedToken.id } });
   }
 
-  async create(body: CreateListDto, token: string) {
+  async create(payload: CreateListDto) {
+    const { body, token } = payload;
     const decodedToken = await this.jwtService.verifyAsync(token);
     return this.listRepository.save({ ...body, userId: decodedToken.id });
   }

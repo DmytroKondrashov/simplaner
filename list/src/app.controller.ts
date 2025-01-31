@@ -14,8 +14,8 @@ export class AppController {
   }
 
   @MessagePattern('list.create')
-  async create(body: CreateListDto, token: string) {
-    return this.appService.create(body, token);
+  async create(payload: CreateListDto) {
+    return this.appService.create(payload);
   }
 
   @MessagePattern('list.update')
