@@ -1,3 +1,6 @@
 export class CreateListDto {
-  name: string;
+  body: {
+    name: string;
+  };
+  token: string;
 }
