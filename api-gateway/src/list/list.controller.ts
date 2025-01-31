@@ -22,8 +22,11 @@ export class ListController {
   }
 
   @Post('create')
-  async create(@Body() body: CreateListDto) {
-    return this.listService.create(body);
+  async create(
+    @Body() body: CreateListDto,
+    @Headers('Authorization') token: string,
+  ) {
+    return this.listService.create(body, token);
   }
 
   @Post('update')

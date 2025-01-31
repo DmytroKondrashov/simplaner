@@ -11,8 +11,8 @@ export class ListService {
     return this.client.send('list.findAll', { token });
   }
 
-  async create(body: CreateListDto) {
-    return this.client.send('list.create', { body });
+  async create(body: CreateListDto, token: string) {
+    return this.client.send('list.create', { body, token });
   }
 
   async update(body: UpdateListDto) {
