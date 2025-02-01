@@ -7,12 +7,12 @@ import { UpdateItemDto } from './dtos/update.item.dto';
 export class ItemService {
   constructor(@Inject('ITEM_SERVICE') private readonly client: ClientKafka) {}
 
-  async createItem(payload: CreateItemDto) {
-    return this.client.send('item.create', payload);
+  async createItem(payload: CreateItemDto, token: string) {
+    return this.client.send('item.create', { ...payload, token });
   }
 
-  async updateItem(payload: UpdateItemDto) {
-    return this.client.send('item.update', payload);
+  async updateItem(payload: UpdateItemDto, token: string) {
+    return this.client.send('item.update', { ...payload, token });
   }
 
   async findAll(token: string) {
