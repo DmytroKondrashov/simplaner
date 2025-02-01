@@ -1,11 +1,21 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateItemDto } from './dtos/create.item.dto';
 import { UpdateItemDto } from './dtos/update.item.dto';
 
 @Injectable()
-export class ItemService {
+export class ItemService implements OnModuleInit {
   constructor(@Inject('ITEM_SERVICE') private readonly client: ClientKafka) {}
+
+  async onModuleInit() {
+    [
+      'item.create',
+      'item.update',
+      'item.findAll',
+      'item.findOne',
+      'item.delete',
+    ].forEach((key) => this.client.subscribeToResponseOf(key));
+  }
 
   async createItem(payload: CreateItemDto, token: string) {
     return this.client.send('item.create', { ...payload, token });
