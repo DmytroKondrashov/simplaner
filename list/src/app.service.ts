@@ -37,7 +37,7 @@ export class AppService implements OnModuleInit {
       console.log({ error });
       throw new RpcException({
         statusCode: 403,
-        message: 'Invalid or expired token',
+        message: error.message,
       });
     }
   }
@@ -51,7 +51,7 @@ export class AppService implements OnModuleInit {
       console.log({ error });
       throw new RpcException({
         statusCode: 403,
-        message: 'Invalid or expired token',
+        message: error.message,
       });
     }
   }
