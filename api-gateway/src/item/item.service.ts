@@ -15,9 +15,10 @@ export class ItemService {
     return this.client.send('item.update', { ...payload, token });
   }
 
-  async findAll(token: string) {
+  async findAll(token: string, listId: string) {
     return this.client.send('item.findAll', {
       token,
+      listId,
     });
   }
 
