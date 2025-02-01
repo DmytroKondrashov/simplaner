@@ -2,7 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { List } from './entities/list.entity';
 import { Repository } from 'typeorm';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import { CreateListDto } from './dtos/create.list.dto';
 import { UpdateListDto } from './dtos/update.list.dto';
@@ -23,15 +23,29 @@ export class AppService implements OnModuleInit {
     this.client.subscribeToResponseOf('list.delete');
   }
 
+  async decodeToken(token: string) {
+    return this.jwtService.verifyAsync(token, {
+      secret: process.env.JWT_SECRET,
+    });
+  }
+
   async findAll(token: string) {
-    const decodedToken = await this.jwtService.verifyAsync(token);
+    const decodedToken = await this.decodeToken(token);
     return this.listRepository.find({ where: { userId: decodedToken.id } });
   }
 
   async create(payload: CreateListDto) {
-    const { body, token } = payload;
-    const decodedToken = await this.jwtService.verifyAsync(token);
-    return this.listRepository.save({ ...body, userId: decodedToken.id });
+    try {
+      const { body, token } = payload;
+      const decodedToken = await this.decodeToken(token);
+      return this.listRepository.save({ ...body, userId: decodedToken.id });
+    } catch (error) {
+      console.log({ error });
+      throw new RpcException({
+        statusCode: 403,
+        message: 'Invalid or expired token',
+      });
+    }
   }
 
   async update(body: UpdateListDto, token: string) {
