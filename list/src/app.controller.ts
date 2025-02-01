@@ -19,8 +19,8 @@ export class AppController {
   }
 
   @MessagePattern('list.update')
-  async update(body: UpdateListDto, token: string) {
-    return this.appService.update(body, token);
+  async update(payload: UpdateListDto) {
+    return this.appService.update(payload);
   }
 
   @MessagePattern('list.delete')

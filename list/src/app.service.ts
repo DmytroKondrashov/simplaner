@@ -56,16 +56,28 @@ export class AppService implements OnModuleInit {
     }
   }
 
-  async update(body: UpdateListDto, token: string) {
-    const decodedToken = await this.jwtService.verifyAsync(token);
-    return this.listRepository.update(body.id, {
-      ...body,
-      userId: Number(decodedToken.id),
-    });
+  async update(payload: UpdateListDto) {
+    try {
+      const decodedToken = await this.decodeToken(payload.token);
+      await this.listRepository.update(payload.body.id, {
+        ...payload.body,
+        userId: Number(decodedToken.id),
+      });
+      const res = await this.listRepository.findOne({
+        where: { id: payload.body.id, userId: Number(decodedToken.id) },
+      });
+      return JSON.stringify(res);
+    } catch (error) {
+      console.log({ error });
+      throw new RpcException({
+        statusCode: 403,
+        message: error.message,
+      });
+    }
   }
 
   async delete(id: number, token: string) {
-    const decodedToken = await this.jwtService.verifyAsync(token);
+    const decodedToken = await this.decodeToken(token);
     return this.listRepository.delete({ id, userId: Number(decodedToken.id) });
   }
 }
