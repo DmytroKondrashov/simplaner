@@ -31,8 +31,12 @@ export class ListController {
   }
 
   @Post('update')
-  async update(@Body() body: UpdateListDto) {
-    return this.listService.update(body);
+  async update(
+    @Body() body: UpdateListDto,
+    @Headers('Authorization') token: string,
+  ) {
+    const clearedToken = token.replace('Bearer ', '');
+    return this.listService.update(body, clearedToken);
   }
 
   @Delete(':id')

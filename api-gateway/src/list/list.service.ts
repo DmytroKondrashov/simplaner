@@ -21,8 +21,8 @@ export class ListService implements OnModuleInit {
     return this.client.send('list.create', { body, token });
   }
 
-  async update(body: UpdateListDto) {
-    return this.client.send('list.update', { body });
+  async update(body: UpdateListDto, token: string) {
+    return this.client.send('list.update', { body, token });
   }
 
   async delete(id: string, token: string) {
