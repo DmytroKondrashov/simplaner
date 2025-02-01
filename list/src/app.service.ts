@@ -76,8 +76,20 @@ export class AppService implements OnModuleInit {
     }
   }
 
-  async delete(id: number, token: string) {
-    const decodedToken = await this.decodeToken(token);
-    return this.listRepository.delete({ id, userId: Number(decodedToken.id) });
+  async delete(payload: { id: string; token: string }) {
+    try {
+      const decodedToken = await this.decodeToken(payload.token);
+      await this.listRepository.delete({
+        id: Number(payload.id),
+        userId: Number(decodedToken.id),
+      });
+      return { message: 'List deleted successfully' };
+    } catch (error) {
+      console.log({ error });
+      throw new RpcException({
+        statusCode: 403,
+        message: error.message,
+      });
+    }
   }
 }

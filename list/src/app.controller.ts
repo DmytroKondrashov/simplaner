@@ -24,7 +24,7 @@ export class AppController {
   }
 
   @MessagePattern('list.delete')
-  async delete(id: string, token: string) {
-    return this.appService.delete(Number(id), token);
+  async delete(payload: { id: string; token: string }) {
+    return this.appService.delete(payload);
   }
 }
