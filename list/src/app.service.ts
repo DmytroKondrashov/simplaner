@@ -30,8 +30,16 @@ export class AppService implements OnModuleInit {
   }
 
   async findAll(token: string) {
-    const decodedToken = await this.decodeToken(token);
-    return this.listRepository.find({ where: { userId: decodedToken.id } });
+    try {
+      const decodedToken = await this.decodeToken(token);
+      return this.listRepository.find({ where: { userId: decodedToken.id } });
+    } catch (error) {
+      console.log({ error });
+      throw new RpcException({
+        statusCode: 403,
+        message: 'Invalid or expired token',
+      });
+    }
   }
 
   async create(payload: CreateListDto) {

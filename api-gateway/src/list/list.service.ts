@@ -14,7 +14,7 @@ export class ListService implements OnModuleInit {
   }
 
   async findAll(token: string) {
-    return this.client.send('list.findAll', { token });
+    return this.client.send('list.findAll', token);
   }
 
   async create(body: CreateListDto, token: string) {
