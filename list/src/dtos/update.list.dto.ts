@@ -1,5 +1,8 @@
 export class UpdateListDto {
-  id: number;
-  name: string;
-  userId: number;
+  body: {
+    id: number;
+    name: string;
+    userId: number;
+  };
+  token: string;
 }
