@@ -39,6 +39,18 @@ export class ListController {
     return this.listService.update(body, clearedToken);
   }
 
+  @Post('addItem')
+  async addItem(@Body() body: any, @Headers('Authorization') token: string) {
+    const clearedToken = token.replace('Bearer ', '');
+    return this.listService.addItem(body, clearedToken);
+  }
+
+  @Post('deleteItem')
+  async deleteItem(@Body() body: any, @Headers('Authorization') token: string) {
+    const clearedToken = token.replace('Bearer ', '');
+    return this.listService.deleteItem(body, clearedToken);
+  }
+
   @Delete(':id')
   async delete(
     @Param('id') id: string,
