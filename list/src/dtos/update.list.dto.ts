@@ -3,7 +3,6 @@ export class UpdateListDto {
     id: number;
     name?: string;
     userId?: number;
-    items?: any[];
   };
   token: string;
 }
