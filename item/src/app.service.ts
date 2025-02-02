@@ -1,19 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Item } from './entities/item.entity';
-import { RpcException } from '@nestjs/microservices';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
   constructor(
     @InjectRepository(Item)
     private readonly itemRepository: Repository<Item>,
+    @Inject('ITEM_SERVICE') private readonly client: ClientKafka,
   ) {}
 
   async createItem(item: any, token: string): Promise<Item> {
     try {
       const result = await this.itemRepository.save(item);
+      this.client.emit('list.update', {
+        body: { items: [...item] },
+        token,
+      });
       return result;
     } catch (error) {
       throw new RpcException(error);
