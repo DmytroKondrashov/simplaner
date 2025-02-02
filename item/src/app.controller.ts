@@ -8,8 +8,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @MessagePattern('item.create')
-  createItem(item: Item): Promise<Item> {
-    return this.appService.createItem(item);
+  createItem(payload: { item: Item; token: string }): Promise<Item> {
+    const { token, ...item } = payload;
+    return this.appService.createItem(item, token);
   }
 
   @MessagePattern('item.get')
