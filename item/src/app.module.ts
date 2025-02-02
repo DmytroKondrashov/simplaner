@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Item } from './entities/item.entity';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -23,6 +24,15 @@ import { Item } from './entities/item.entity';
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([Item]),
+    ClientsModule.register([
+      {
+        name: 'ITEM_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: { brokers: ['localhost:9092'] },
+        },
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService],
