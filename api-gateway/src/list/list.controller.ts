@@ -10,6 +10,7 @@ import {
 import { ListService } from './list.service';
 import { CreateListDto } from './dtos/create.list.dto';
 import { UpdateListDto } from './dtos/update.post.dto';
+import { ModifyItemDto } from './dtos/modify.item.dto';
 
 @Controller('list')
 export class ListController {
@@ -40,13 +41,19 @@ export class ListController {
   }
 
   @Post('addItem')
-  async addItem(@Body() body: any, @Headers('Authorization') token: string) {
+  async addItem(
+    @Body() body: ModifyItemDto,
+    @Headers('Authorization') token: string,
+  ) {
     const clearedToken = token.replace('Bearer ', '');
     return this.listService.addItem(body, clearedToken);
   }
 
   @Post('deleteItem')
-  async deleteItem(@Body() body: any, @Headers('Authorization') token: string) {
+  async deleteItem(
+    @Body() body: ModifyItemDto,
+    @Headers('Authorization') token: string,
+  ) {
     const clearedToken = token.replace('Bearer ', '');
     return this.listService.deleteItem(body, clearedToken);
   }
