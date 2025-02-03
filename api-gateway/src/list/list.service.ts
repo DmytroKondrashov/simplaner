@@ -9,9 +9,14 @@ export class ListService implements OnModuleInit {
   constructor(@Inject('LIST_SERVICE') private readonly client: ClientKafka) {}
 
   async onModuleInit() {
-    ['list.create', 'list.findAll', 'list.delete', 'list.update'].forEach(
-      (key) => this.client.subscribeToResponseOf(key),
-    );
+    [
+      'list.create',
+      'list.findAll',
+      'list.delete',
+      'list.update',
+      'list.addItem.reply',
+      'list.deleteItem.reply',
+    ].forEach((key) => this.client.subscribeToResponseOf(key));
   }
 
   async findAll(token: string) {
