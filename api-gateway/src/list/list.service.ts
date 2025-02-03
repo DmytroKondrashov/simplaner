@@ -2,6 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateListDto } from './dtos/create.list.dto';
 import { UpdateListDto } from './dtos/update.post.dto';
+import { ModifyItemDto } from './dtos/modify.item.dto';
 
 @Injectable()
 export class ListService implements OnModuleInit {
@@ -25,11 +26,11 @@ export class ListService implements OnModuleInit {
     return this.client.send('list.update', { body, token });
   }
 
-  async addItem(body: any, token: string) {
+  async addItem(body: ModifyItemDto, token: string) {
     return this.client.send('list.addItem', { body, token });
   }
 
-  async deleteItem(body: any, token: string) {
+  async deleteItem(body: ModifyItemDto, token: string) {
     return this.client.send('list.deleteItem', { body, token });
   }
 
