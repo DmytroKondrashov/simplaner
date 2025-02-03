@@ -14,8 +14,8 @@ export class ListService implements OnModuleInit {
       'list.findAll',
       'list.delete',
       'list.update',
-      'list.addItem.reply',
-      'list.deleteItem.reply',
+      'list.addItem',
+      'list.deleteItem',
     ].forEach((key) => this.client.subscribeToResponseOf(key));
   }
 
