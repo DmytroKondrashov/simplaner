@@ -76,6 +76,27 @@ export class AppService implements OnModuleInit {
     }
   }
 
+  async addItem(payload: any) {
+    try {
+      payload.body.items.forEach((item) => {
+        item.listId = payload.body.id;
+      });
+      // TODO: Add items to list!
+      await this.listRepository.update(payload.body.id, {
+        ...payload.body,
+      });
+      const res = await this.listRepository.findOne({
+        where: { id: payload.body.id },
+      });
+      return JSON.stringify(res);
+    } catch (error) {
+      throw new RpcException({
+        statusCode: 403,
+        message: error.message,
+      });
+    }
+  }
+
   async delete(payload: { id: string; token: string }) {
     try {
       const decodedToken = await this.decodeToken(payload.token);

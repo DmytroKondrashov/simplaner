@@ -23,6 +23,17 @@ export class AppController {
     return this.appService.update(payload);
   }
 
+  @MessagePattern('list.addItem')
+  async addItem(payload: any) {
+    console.log(payload);
+    // return this.appService.addItem(payload);
+  }
+
+  @MessagePattern('list.deleteItem')
+  async deleteItem(payload: any) {
+    // return this.appService.deleteItem(payload);
+  }
+
   @MessagePattern('list.delete')
   async delete(payload: { id: string; token: string }) {
     return this.appService.delete(payload);
