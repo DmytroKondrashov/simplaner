@@ -10,4 +10,7 @@ export class List {
 
   @Column()
   userId: number;
+
+  @Column('int', { array: true, nullable: true })
+  items?: number[];
 }
