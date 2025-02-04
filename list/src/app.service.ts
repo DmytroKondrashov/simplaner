@@ -78,19 +78,21 @@ export class AppService implements OnModuleInit {
 
   async addItem(payload: any) {
     try {
-      payload.body.items.forEach((item) => {
-        item.listId = payload.body.id;
+      const itemsIds = [];
+      const items = payload.body.items.map((item) => {
+        itemsIds.push(item.id);
+        return { ...item, listId: payload.body.id };
       });
       const currentList = await this.listRepository.findOne({
         where: { id: payload.body.id },
       });
       if (currentList.items) {
         await this.listRepository.update(payload.body.id, {
-          items: [...currentList.items, ...payload.body.items],
+          items: [...currentList.items, ...itemsIds],
         });
       } else {
         await this.listRepository.update(payload.body.id, {
-          items: [...payload.body.items],
+          items: [...itemsIds],
         });
       }
       const res = await this.listRepository.findOne({
