@@ -39,6 +39,15 @@ import { JwtService } from '@nestjs/jwt';
       },
       inject: [ConfigService],
     }),
+    ClientsModule.register([
+      {
+        name: 'ITEM_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: { brokers: ['localhost:9092'] },
+        },
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],
