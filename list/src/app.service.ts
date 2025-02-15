@@ -14,6 +14,7 @@ export class AppService implements OnModuleInit {
     @InjectRepository(List)
     private readonly listRepository: Repository<List>,
     @Inject('API_GATEWAY_SERVICE') private readonly client: ClientKafka,
+    @Inject('ITEM_SERVICE') private readonly itemClient: ClientKafka,
   ) {}
 
   onModuleInit() {
@@ -81,9 +82,17 @@ export class AppService implements OnModuleInit {
       const itemsIds = [];
       // TODO: Create items in the items microservice!
       const items = payload.body.items.map((item) => {
+        console.log({ item });
         itemsIds.push(item.id);
         return { ...item, listId: payload.body.id };
       });
+      // TODO: Create items in the items microservice!
+      const createdItems = await Promise.all(
+        items.map(async (item) => {
+          return this.itemClient.emit('item.create', item);
+        }),
+      );
+      console.log({ createdItems });
       const currentList = await this.listRepository.findOne({
         where: { id: payload.body.id },
       });
