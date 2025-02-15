@@ -6,6 +6,7 @@ import { ClientKafka, RpcException } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import { CreateListDto } from './dtos/create.list.dto';
 import { UpdateListDto } from './dtos/update.list.dto';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AppService implements OnModuleInit {
@@ -22,6 +23,7 @@ export class AppService implements OnModuleInit {
     this.client.subscribeToResponseOf('list.create');
     this.client.subscribeToResponseOf('list.update');
     this.client.subscribeToResponseOf('list.delete');
+    this.itemClient.subscribeToResponseOf('item.create');
   }
 
   async decodeToken(token: string) {
@@ -82,14 +84,17 @@ export class AppService implements OnModuleInit {
       const itemsIds = [];
       // TODO: Create items in the items microservice!
       const items = payload.body.items.map((item) => {
-        console.log({ item });
+        // console.log({ item });
         itemsIds.push(item.id);
         return { ...item, listId: payload.body.id };
       });
       // TODO: Create items in the items microservice!
       const createdItems = await Promise.all(
         items.map(async (item) => {
-          return this.itemClient.emit('item.create', item);
+          const result = await firstValueFrom(
+            this.itemClient.send('item.create', item),
+          );
+          return result;
         }),
       );
       console.log({ createdItems });
