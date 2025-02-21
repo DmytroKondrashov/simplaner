@@ -24,8 +24,8 @@ export class AppController {
   }
 
   @MessagePattern('list.addItem')
-  async addItem(payload: any) {
-    return this.appService.addItem(payload);
+  async addItem(payload: any, token: string) {
+    return this.appService.addItem(payload, token);
   }
 
   @MessagePattern('list.deleteItem')
