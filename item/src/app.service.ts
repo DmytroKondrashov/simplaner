@@ -16,7 +16,7 @@ export class AppService {
     try {
       const result = await this.itemRepository.save(item);
       this.client.emit('list.update', {
-        body: { items: [...item] },
+        body: { items: item },
         token,
       });
       return result;
