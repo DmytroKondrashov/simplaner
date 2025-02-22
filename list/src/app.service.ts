@@ -89,7 +89,7 @@ export class AppService implements OnModuleInit {
       const items = payload.items.map((item) => {
         // console.log({ item });
         itemsIds.push(item.id);
-        return { ...item, listId: payload.body.id };
+        return { ...item, listId: payload.id };
       });
       console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
       console.log('Before creating items');
