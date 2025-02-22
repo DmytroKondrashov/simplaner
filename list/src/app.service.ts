@@ -80,9 +80,6 @@ export class AppService implements OnModuleInit {
   }
 
   async addItem(payload: any, token: string) {
-    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-    console.log({ payload, token });
-    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
     try {
       const itemsIds = [];
       // TODO: Create items in the items microservice!
@@ -91,9 +88,6 @@ export class AppService implements OnModuleInit {
         itemsIds.push(item.id);
         return { ...item, listId: payload.id };
       });
-      console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-      console.log('Before creating items');
-      console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
       const createdItems = await Promise.all(
         items.map(async (item) => {
           const result = await firstValueFrom(
@@ -102,9 +96,9 @@ export class AppService implements OnModuleInit {
           return result;
         }),
       );
-      console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-      console.log({ itemsIds });
-      console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+      // console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+      // console.log({ createdItems });
+      // console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
       const currentList = await this.listRepository.findOne({
         where: { id: payload.body.id },
       });
