@@ -80,10 +80,13 @@ export class AppService implements OnModuleInit {
   }
 
   async addItem(payload: any, token: string) {
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    console.log({ payload, token });
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
     try {
       const itemsIds = [];
       // TODO: Create items in the items microservice!
-      const items = payload.body.items.map((item) => {
+      const items = payload.items.map((item) => {
         // console.log({ item });
         itemsIds.push(item.id);
         return { ...item, listId: payload.body.id };
